@@ -44,8 +44,9 @@
                     .addTo(group);
             });
             if (coords.length > 1) {
+                // Not interactive, so clicks on a station go to its marker rather than the line.
                 L.polyline(coords, {
-                    color: cruise.line_color || 'blue', weight: 2, opacity: 0.5
+                    color: cruise.line_color || 'blue', weight: 2, opacity: 0.5, interactive: false
                 }).addTo(group);
             }
         }).catch(function (err) {
@@ -58,6 +59,7 @@
 
     function eezLayer(url) {
         var layer = L.geoJson(null, {
+            pane: 'eez',
             style: function () {
                 return {color: '#3388ff', fillColor: '#3388ff', fillOpacity: 0.1, opacity: 0.4, weight: 2};
             }
@@ -215,6 +217,11 @@
         if (cfg.title) document.title = cfg.title;
 
         var map = L.map('map', {center: cfg.map.center, zoom: cfg.map.zoom, zoomControl: true});
+        // Grid lines and EEZ polygons get their own panes between the satellite tiles (200) and
+        // the station layers (overlayPane, 400), so stations stay on top and clickable no matter
+        // in which order layers are switched on or redrawn.
+        map.createPane('graticule').style.zIndex = 350;
+        map.createPane('eez').style.zIndex = 360;
         window.seaviewMap = map;
         L.control.scale().addTo(map);
 
@@ -237,6 +244,7 @@
         L.graticule({
             interval: [{interval: 30, start: 0}, {interval: 15, start: 3}, {interval: 10, start: 5},
                        {interval: 5, start: 7}, {interval: 2, start: 9}, {interval: 1, start: 11}],
+            pane: 'graticule', interactive: false,
             showLabel: true, opacity: 1.0, weight: 0.8, color: '#666',
             font: '12px Verdana', fontColor: '#111', zoneLabel: false, sphere: false
         }).addTo(map);
@@ -262,7 +270,9 @@
         }
         if (cfg.colorbars && cfg.colorbars.length) overlays['Colorbars'] = colorbarLayer(map, cfg.colorbars);
 
-        L.control.layers(basemaps, overlays, {position: 'topright', collapsed: false, autoZIndex: true}).addTo(map);
+        // A base map picker is only useful when there is more than one base map.
+        var baseChoices = Object.keys(basemaps).length > 1 ? basemaps : {};
+        L.control.layers(baseChoices, overlays, {position: 'topright', collapsed: false, autoZIndex: true}).addTo(map);
 
         if (cfg.layer_config) dynamicLayers(map, cfg.layer_config, cfg.layer_refresh_ms || 0);
     }

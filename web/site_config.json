@@ -21,17 +21,17 @@
   "eez": "data/eez.geojson",
   "cruises": [
     {
-      "name": "BioReactors",
+      "name": "Bioreactors I",
       "stations": "data/stations/bioreactors.geojson",
       "color": "green"
     },
     {
-      "name": "SubSEA",
+      "name": "SUBSEA I",
       "stations": "data/stations/subsea.geojson",
       "color": "gray"
     },
     {
-      "name": "WAM",
+      "name": "WAM I",
       "stations": "data/stations/wam.geojson",
       "color": "#d62728"
     }
