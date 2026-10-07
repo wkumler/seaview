@@ -127,3 +127,19 @@ class TestFilterSmallContours:
             if len(path.vertices) > 0:
                 assert path.vertices.ndim == 2
                 assert path.vertices.shape[1] == 2
+
+
+class TestGetCmap:
+    """Tests for colormap name resolution."""
+
+    @pytest.mark.parametrize("name", ["matplotlib:RdBu_r", "RdBu_r", "gist_rainbow_r",
+                                      "matplotlib:nipy_spectral"])
+    def test_matplotlib_names_match_matplotlib(self, name):
+        import matplotlib
+        from seaview.tilers.utils import get_cmap
+        expected = matplotlib.colormaps[name.removeprefix("matplotlib:")]
+        assert np.allclose(get_cmap(name)(np.linspace(0, 1, 11)), expected(np.linspace(0, 1, 11)))
+
+    def test_cmap_package_names(self):
+        from seaview.tilers.utils import get_cmap
+        assert get_cmap("tol:rainbow_WhBr").N > 0

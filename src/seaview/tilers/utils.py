@@ -8,6 +8,24 @@ import matplotlib
 from matplotlib.path import Path
 from typing import Tuple, Optional, List
 from pyproj import Transformer
+import cmap as cmap_extended
+
+
+def get_cmap(name):
+    """Resolve a colormap name to a matplotlib Colormap.
+
+    Matplotlib names (optionally prefixed with ``matplotlib:``, including
+    ``_r`` variants) use matplotlib's own colormaps; anything else, e.g.
+    ``tol:rainbow_WhBr``, is looked up in the ``cmap`` package. The cmap
+    package alone does not know ``matplotlib:RdBu_r`` and maps names such as
+    ``gist_rainbow_r`` to different colormaps.
+    """
+    if not isinstance(name, str):
+        return name
+    mpl_name = name.removeprefix("matplotlib:")
+    if mpl_name in matplotlib.colormaps:
+        return matplotlib.colormaps[mpl_name]
+    return cmap_extended.Colormap(name).to_matplotlib()
 
 
 # Web Mercator transformer (lon/lat to x/y meters)
