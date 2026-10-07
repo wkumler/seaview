@@ -154,7 +154,7 @@ only add the newest day (~20–25 minutes).
 systemctl status seaview-daily --no-pager
 ```
 shows `status=0/SUCCESS`. Reload the map: the left panel lists dates for SSH, SST and Chl, and
-ticking one shows the satellite layer. Ticking **Colorbars** on the right shows the legend.
+ticking one shows the satellite layer. The legend (colorbars) shows at the bottom right.
 
 > `status=1/FAILURE`: look for `FAILED` lines with
 > `sudo journalctl -u seaview-daily --no-pager | grep FAILED`.

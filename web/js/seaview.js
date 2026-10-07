@@ -268,7 +268,7 @@
             overlays['Ship Track (Historical)'] = ship.track.addTo(map);
             overlays['Real-time Position'] = ship.position.addTo(map);
         }
-        if (cfg.colorbars && cfg.colorbars.length) overlays['Colorbars'] = colorbarLayer(map, cfg.colorbars);
+        if (cfg.colorbars && cfg.colorbars.length) overlays['Colorbars'] = colorbarLayer(map, cfg.colorbars).addTo(map);
 
         // A base map picker is only useful when there is more than one base map.
         var baseChoices = Object.keys(basemaps).length > 1 ? basemaps : {};
