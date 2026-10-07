@@ -1,0 +1,61 @@
+{
+  "title": "WAM Cruise Support",
+  "map": {
+    "center": [
+      1.0,
+      -17.0
+    ],
+    "zoom": 4
+  },
+  "layer_config": "layer_config.json",
+  "layer_refresh_ms": 300000,
+  "basemaps": [
+    {
+      "name": "Esri Ocean",
+      "url": "https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}",
+      "attribution": "Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri",
+      "maxZoom": 10,
+      "default": true
+    }
+  ],
+  "eez": "data/eez.geojson",
+  "cruises": [
+    {
+      "name": "BioReactors",
+      "stations": "data/stations/bioreactors.geojson",
+      "color": "green"
+    },
+    {
+      "name": "SubSEA",
+      "stations": "data/stations/subsea.geojson",
+      "color": "gray"
+    },
+    {
+      "name": "WAM",
+      "stations": "data/stations/wam.geojson",
+      "color": "#d62728"
+    }
+  ],
+  "ship": {
+    "name": "R/V Falkor (too)",
+    "track_url": "https://soi-vessel-geojson-292717291655.us-central1.run.app/track.geojson",
+    "latest_url": "https://soi-vessel-geojson-292717291655.us-central1.run.app/latest.geojson",
+    "interval_ms": 30000,
+    "speed_to_knots": 0.539957,
+    "moving_knots": 5.5
+  },
+  "colorbars": [
+    {
+      "src": "colorbars/ssh.png",
+      "alt": "Sea Surface Height (m)"
+    },
+    {
+      "src": "colorbars/ostia.png",
+      "alt": "Sea Surface Temperature (°C)"
+    },
+    {
+      "src": "colorbars/globcolour.png",
+      "alt": "Chlorophyll (mg/m3)"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+.leaflet-ruler {
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    cursor: pointer;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMSAzSDNjLS42IDAtMSAuNC0xIDF2MTZjMCAuNi40IDEgMSAxaDE4Yy42IDAgMS0uNCAxLTFWNGMwLS42LS40LTEtMS0xeiI+PC9wYXRoPjxwYXRoIGQ9Ik0yIDh2MTJjMCAuNi40IDEgMSAxaDEyIj48L3BhdGg+PHBhdGggZD0iTTYgNHY0Ij48L3BhdGg+PHBhdGggZD0iTTEwIDR2NGgtNCI+PC9wYXRoPjxwYXRoIGQ9Ik0xNCA0djRoLTQiPjwvcGF0aD48cGF0aCBkPSJNMTggNHY0aC00Ij48L3BhdGg+PC9zdmc+');
+    background-size: 20px 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+}
+
+.leaflet-ruler:hover {
+    background-color: #f4f4f4;
+}
+
+.leaflet-ruler.ruler-active {
+    background-color: #e0e0e0;
+}
+
+.ruler-crosshair {
+    cursor: crosshair !important;
+}
+
+.result-tooltip {
+    background-color: white !important;
+    border: 2px solid #00aa00 !important;
+    border-radius: 4px !important;
+    padding: 4px 8px !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+}
+
+.result-tooltip:before {
+    border-top-color: #00aa00 !important;
+}

@@ -1,0 +1,341 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.0385,
+          -42.7692
+        ]
+      },
+      "properties": {
+        "name": "Start",
+        "stationCode": "JG",
+        "distance": 0,
+        "speed": "9.5",
+        "arrive": "",
+        "departure": "2026-01-21 15:30",
+        "duration": "0",
+        "comments": "Starting point",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          "-59.136892",
+          "-43.3045"
+        ]
+      },
+      "properties": {
+        "name": "Station-1",
+        "stationCode": "RW",
+        "distance": 260.92,
+        "speed": "9.5",
+        "arrive": "2026-01-22 18:57",
+        "departure": "2026-01-23 06:57",
+        "duration": "12",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          "-54.687878",
+          "-44.07319"
+        ]
+      },
+      "properties": {
+        "name": "Station-2",
+        "stationCode": "TL",
+        "distance": 459.48,
+        "speed": "9.5",
+        "arrive": "2026-01-24 03:51",
+        "departure": "2026-01-24 06:51",
+        "duration": "3",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          "-50.271252",
+          "-44.284461"
+        ]
+      },
+      "properties": {
+        "name": "Station-3",
+        "stationCode": "UU",
+        "distance": 650.06,
+        "speed": "9.5",
+        "arrive": "2026-01-25 02:54",
+        "departure": "2026-01-30 02:54",
+        "duration": "120",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          "-45.603800",
+          "-40.7081"
+        ]
+      },
+      "properties": {
+        "name": "Station-4",
+        "stationCode": "ET",
+        "distance": 947.95,
+        "speed": "12.4",
+        "arrive": "2026-01-31 02:55",
+        "departure": "2026-01-31 07:25",
+        "duration": "4.5",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          "-43.33200",
+          "-38.86090"
+        ]
+      },
+      "properties": {
+        "name": "Station-5",
+        "stationCode": "JU",
+        "distance": 1100.54,
+        "speed": "10",
+        "arrive": "2026-01-31 22:40",
+        "departure": "2026-02-01 02:40",
+        "duration": "4",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          "-39.83093",
+          "-35.755600"
+        ]
+      },
+      "properties": {
+        "name": "Station-6",
+        "stationCode": "AU",
+        "distance": 1350.93,
+        "speed": "10",
+        "arrive": "2026-02-02 03:42",
+        "departure": "2026-02-06 02:42",
+        "duration": "95",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -36.375732,
+          -32.962586
+        ]
+      },
+      "properties": {
+        "name": "Station-7",
+        "stationCode": "XM",
+        "distance": 1590.58,
+        "speed": "9.5",
+        "arrive": "2026-02-07 03:55",
+        "departure": "2026-02-07 07:55",
+        "duration": "4",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          "-34.013672",
+          "-31.090574"
+        ]
+      },
+      "properties": {
+        "name": "Station-8",
+        "stationCode": "SB",
+        "distance": 1755.16,
+        "speed": "9.5",
+        "arrive": "2026-02-08 01:14",
+        "departure": "2026-02-08 15:14",
+        "duration": "14",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          "-32.7372",
+          "-30.074448"
+        ]
+      },
+      "properties": {
+        "name": "Station-9",
+        "stationCode": "ZV",
+        "distance": 1845.02,
+        "speed": "11.5",
+        "arrive": "2026-02-08 23:02",
+        "departure": "2026-02-09 01:02",
+        "duration": "2",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -29.575195,
+          -27.44004
+        ]
+      },
+      "properties": {
+        "name": "Station-10",
+        "stationCode": "YY",
+        "distance": 2074.6,
+        "speed": "11.5",
+        "arrive": "2026-02-09 20:59",
+        "departure": "2026-02-10 08:59",
+        "duration": "12",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -26.982422,
+          -25.284438
+        ]
+      },
+      "properties": {
+        "name": "Station-11",
+        "stationCode": "SU",
+        "distance": 2264.87,
+        "speed": "10.5",
+        "arrive": "2026-02-11 03:06",
+        "departure": "2026-02-11 05:06",
+        "duration": "2",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          "-24.516310",
+          "-23.095090"
+        ]
+      },
+      "properties": {
+        "name": "Station-12",
+        "stationCode": "GK",
+        "distance": 2453.33,
+        "speed": "11",
+        "arrive": "2026-02-11 22:13",
+        "departure": "2026-02-16 14:13",
+        "duration": "112",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          "-32.069",
+          "-23.97"
+        ]
+      },
+      "properties": {
+        "name": "Station-13",
+        "stationCode": "DG",
+        "distance": 2872.33,
+        "speed": "10 ",
+        "arrive": "2026-02-18 08:07",
+        "departure": "2026-02-19 10:07",
+        "duration": "26",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -37.704599,
+          "-23.700000"
+        ]
+      },
+      "properties": {
+        "name": "Station-14",
+        "stationCode": "JQ",
+        "distance": 3182.24,
+        "speed": "9.5",
+        "arrive": "2026-02-20 18:44",
+        "departure": "2026-02-20 20:44",
+        "duration": "2",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.1729,
+          -22.9068
+        ]
+      },
+      "properties": {
+        "name": "End",
+        "stationCode": "BE",
+        "distance": 3487.49,
+        "speed": "9.5",
+        "arrive": "2026-02-22 04:51",
+        "departure": "2026-02-22 04:51",
+        "duration": "0",
+        "comments": "Destination",
+        "depth": ""
+      }
+    }
+  ]
+}

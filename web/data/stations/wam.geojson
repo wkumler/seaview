@@ -1,0 +1,575 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.0,
+          5.666
+        ]
+      },
+      "properties": {
+        "name": "Tema",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "Tema, Ghana (start)",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.5,
+          2.833
+        ]
+      },
+      "properties": {
+        "name": "S01",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.0,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S02",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          3.0625,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S03",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.125,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S04",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.8125,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S05",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.75,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S06",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.6875,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S07",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.625,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S08",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -8.5625,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S09",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -10.5,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S10",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -12.4375,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S11",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -14.375,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S12",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -16.3125,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S13",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -18.25,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S14",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -20.1875,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S15",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -22.125,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S16",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -24.0625,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S17",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -26.0,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S18",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -26.0,
+          2.25
+        ]
+      },
+      "properties": {
+        "name": "S19",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -26.0,
+          4.5
+        ]
+      },
+      "properties": {
+        "name": "S20",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -28.0,
+          4.5
+        ]
+      },
+      "properties": {
+        "name": "S21",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -30.0,
+          4.5
+        ]
+      },
+      "properties": {
+        "name": "S22",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -32.0,
+          4.5
+        ]
+      },
+      "properties": {
+        "name": "S23",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -34.0,
+          4.5
+        ]
+      },
+      "properties": {
+        "name": "S24",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -34.0,
+          2.25
+        ]
+      },
+      "properties": {
+        "name": "S25",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -34.0,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S26",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -36.0,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S27",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -37.0,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "S28",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -38.5267,
+          -3.7319
+        ]
+      },
+      "properties": {
+        "name": "Fortaleza",
+        "stationCode": "",
+        "arrive": "",
+        "departure": "",
+        "duration": "",
+        "comments": "Fortaleza, Brazil (end)",
+        "depth": ""
+      }
+    }
+  ]
+}

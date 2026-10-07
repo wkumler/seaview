@@ -16,6 +16,11 @@ A Python package for generating slippy map tiles from oceanographic satellite da
 - **Configurable Regions**: Define custom geographic bounds for your cruise area
 - **Remote Sync**: Sync tiles to a remote web server via SSH
 
+## Web map and AWS deployment
+
+- `web/`: the Leaflet web map (see `web/README.md`)
+- `server/`: install script for a single Ubuntu server (nginx + daily tile job), see `server/LIGHTSAIL_GUIDE.md`
+
 ## Installation
 
 ### Using uv (recommended)

@@ -1,0 +1,404 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.1729,
+          -22.9068
+        ]
+      },
+      "properties": {
+        "name": "Start_Port",
+        "stationCode": "VZ",
+        "distance": 0,
+        "speed": "9.5",
+        "arrive": "",
+        "departure": "2026-02-22 12:00",
+        "duration": "0",
+        "comments": "Rio de Janeiro\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -39.091,
+          -25.512
+        ]
+      },
+      "properties": {
+        "name": "Leafy_Crab",
+        "stationCode": "TU",
+        "distance": 272.79,
+        "speed": "9.5",
+        "arrive": "2026-02-23 16:42",
+        "departure": "2026-02-23 16:42",
+        "duration": "0",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -37.97,
+          -26.103
+        ]
+      },
+      "properties": {
+        "name": "Frail_Coot",
+        "stationCode": "YN",
+        "distance": 343,
+        "speed": "9.5",
+        "arrive": "2026-02-24 00:05",
+        "departure": "2026-02-24 00:05",
+        "duration": "0",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -36.3,
+          -27
+        ]
+      },
+      "properties": {
+        "name": "Nippy_Cero",
+        "stationCode": "MB",
+        "distance": 447.62,
+        "speed": "9.5",
+        "arrive": "2026-02-24 11:05",
+        "departure": "2026-02-24 11:05",
+        "duration": "0",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -34.201,
+          -26.686
+        ]
+      },
+      "properties": {
+        "name": "Black_Mink",
+        "stationCode": "YO",
+        "distance": 561.63,
+        "speed": "9.5",
+        "arrive": "2026-02-24 23:05",
+        "departure": "2026-02-25 13:05",
+        "duration": "14",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -32,
+          -26.3
+        ]
+      },
+      "properties": {
+        "name": "Soft_Guppy",
+        "stationCode": "IW",
+        "distance": 682.15,
+        "speed": "9.5",
+        "arrive": "2026-02-26 01:46",
+        "departure": "2026-02-26 05:46",
+        "duration": "4",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -29.911,
+          -25.657
+        ]
+      },
+      "properties": {
+        "name": "Pink_Shrimp",
+        "stationCode": "ZV",
+        "distance": 801.33,
+        "speed": "9.5",
+        "arrive": "2026-02-26 18:18",
+        "departure": "2026-02-27 03:18",
+        "duration": "9",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -27.8,
+          -24.9
+        ]
+      },
+      "properties": {
+        "name": "Lame_Molly",
+        "stationCode": "CU",
+        "distance": 924.62,
+        "speed": "9.5",
+        "arrive": "2026-02-27 16:16",
+        "departure": "2026-02-28 01:16",
+        "duration": "9",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -26.196,
+          -23.495
+        ]
+      },
+      "properties": {
+        "name": "Wide_Grebe",
+        "stationCode": "LA",
+        "distance": 1046.41,
+        "speed": "9.5",
+        "arrive": "2026-02-28 14:05",
+        "departure": "2026-02-28 15:05",
+        "duration": "1",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -25.1,
+          -22
+        ]
+      },
+      "properties": {
+        "name": "Spry_Bream",
+        "stationCode": "NN",
+        "distance": 1154.75,
+        "speed": "9.5",
+        "arrive": "2026-03-01 02:29",
+        "departure": "2026-03-01 02:29",
+        "duration": "0",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -24.89,
+          -20.039
+        ]
+      },
+      "properties": {
+        "name": "Brown_Frog",
+        "stationCode": "PS",
+        "distance": 1273.08,
+        "speed": "9.5",
+        "arrive": "2026-03-01 14:56",
+        "departure": "2026-03-02 05:56",
+        "duration": "15",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -25.1,
+          -18
+        ]
+      },
+      "properties": {
+        "name": "Calm_Crane",
+        "stationCode": "IJ",
+        "distance": 1396.08,
+        "speed": "9.5",
+        "arrive": "2026-03-02 18:52",
+        "departure": "2026-03-02 18:52",
+        "duration": "0",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -26.869,
+          -17.24
+        ]
+      },
+      "properties": {
+        "name": "Sleek_Hake",
+        "stationCode": "ZK",
+        "distance": 1507.12,
+        "speed": "9.5",
+        "arrive": "2026-03-03 06:33",
+        "departure": "2026-03-04 02:33",
+        "duration": "20",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -28.452,
+          -16.688
+        ]
+      },
+      "properties": {
+        "name": "Hardy_Seal",
+        "stationCode": "PZ",
+        "distance": 1603.88,
+        "speed": "9.5",
+        "arrive": "2026-03-04 12:44",
+        "departure": "2026-03-04 12:44",
+        "duration": "0",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -30.12,
+          -16.192
+        ]
+      },
+      "properties": {
+        "name": "Gray_Shrimp",
+        "stationCode": "QM",
+        "distance": 1704.44,
+        "speed": "9.5",
+        "arrive": "2026-03-04 23:19",
+        "departure": "2026-03-04 23:19",
+        "duration": "0",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -31.708,
+          -15.681
+        ]
+      },
+      "properties": {
+        "name": "Gaunt_Opah",
+        "stationCode": "KU",
+        "distance": 1801.12,
+        "speed": "9.5",
+        "arrive": "2026-03-05 09:29",
+        "departure": "2026-03-05 09:29",
+        "duration": "0",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -33.361,
+          -15.14
+        ]
+      },
+      "properties": {
+        "name": "Sick_Wahoo",
+        "stationCode": "OJ",
+        "distance": 1902.16,
+        "speed": "9.5",
+        "arrive": "2026-03-05 20:07",
+        "departure": "2026-03-05 20:07",
+        "duration": "0",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -34.6974,
+          -14.7278
+        ]
+      },
+      "properties": {
+        "name": "Wide_Wahoo",
+        "stationCode": "CM",
+        "distance": 1983.54,
+        "speed": "9.5",
+        "arrive": "2026-03-06 04:40",
+        "departure": "2026-03-06 04:40",
+        "duration": "0",
+        "comments": "\r",
+        "depth": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -38.452148,
+          -13.068589
+        ]
+      },
+      "properties": {
+        "name": "End_Port",
+        "stationCode": "WQ",
+        "distance": 2223.98,
+        "speed": "9.5",
+        "arrive": "2026-03-07 05:58",
+        "departure": "2026-03-07 05:58",
+        "duration": "0",
+        "comments": "Rio de Janeiro",
+        "depth": ""
+      }
+    }
+  ]
+}

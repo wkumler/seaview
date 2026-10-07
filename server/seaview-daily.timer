@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the seaview tile update at 06:00 and 18:00 UTC
+
+[Timer]
+OnCalendar=*-*-* 06,18:00:00 UTC
+# If the server was off at a scheduled time, run as soon as it is back.
+Persistent=true
+
+[Install]
+WantedBy=timers.target
