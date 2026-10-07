@@ -6,6 +6,7 @@ Surface Temperature), and chlorophyll concentration.
 """
 import pathlib
 
+import cmasher as cmr
 import numpy as np
 import pandas as pd
 import sysrsync
