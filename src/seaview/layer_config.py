@@ -5,6 +5,7 @@ JSON configuration files that define map layer settings for the
 tile server web interface.
 """
 import json
+import math
 import pathlib
 
 import pandas as pd
@@ -165,7 +166,7 @@ def generate_file(json_file_path="./", remote_tile_url=None):
     config_file_path : str or pathlib.Path, optional
         Directory path where the file will be saved, by default "./".
     """
-    base_url = settings.get("remote_url")+"/tiles/"+settings.get("cruise_name")
+    base_url = settings.get("remote_url").rstrip("/")+"/tiles/"+settings.get("cruise_name")
     base_url = remote_tile_url or base_url
     # Define layer configurations
     layers_config = [
@@ -173,7 +174,7 @@ def generate_file(json_file_path="./", remote_tile_url=None):
             "id": "ssh",
             "name": "SSH CMEMS 0.125°  ",
             "url_path": "ssh",
-            "attribution": "Copernicus 1/125° SSH -0.75–0.75 m",
+            "attribution": f"Copernicus 0.125° SSH {settings['ssh']['vmin']:g}–{settings['ssh']['vmax']:g} m",
             "vmin": settings["ssh"]["vmin"],
             "vmax": settings["ssh"]["vmax"],
             "cmap": settings["ssh"]["cmap"],
@@ -182,7 +183,7 @@ def generate_file(json_file_path="./", remote_tile_url=None):
             "id": "ostia",
             "name": "SST OSTIA 5km     ",
             "url_path": "ostia",
-            "attribution": "OSTIA 2km SST 10–28°C",
+            "attribution": f"OSTIA 5km SST {settings['ostia']['vmin']:g}–{settings['ostia']['vmax']:g}°C",
             "vmin": settings["ostia"]["vmin"],
             "vmax": settings["ostia"]["vmax"],
             "cmap": settings["ostia"]["cmap"],
@@ -191,7 +192,7 @@ def generate_file(json_file_path="./", remote_tile_url=None):
             "id": "globcolour",
             "name": "Chl GlobColour 4km",
             "url_path": "globcolour",
-            "attribution": "Globcolour 4km Chl 0.01-100 mg/m3",
+            "attribution": f"Globcolour 4km Chl {math.exp(settings['globcolour']['vmin']):.2g}–{math.exp(settings['globcolour']['vmax']):.3g} mg/m3",
             "vmin": settings["globcolour"]["vmin"],
             "vmax": settings["globcolour"]["vmax"],
             "cmap": settings["globcolour"]["cmap"],

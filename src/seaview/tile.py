@@ -6,6 +6,7 @@ Surface Temperature), and chlorophyll concentration.
 """
 import pathlib
 
+import cmasher as cmr
 import numpy as np
 import pandas as pd
 import sysrsync
@@ -218,10 +219,10 @@ def globcolour(dtm, verbose=True, force=True):
                              ds.longitude.data,
                              tile_base,
                              settings["zoom_levels"],
-                             cmap="nipy_spectral",
-                             vmin=-4.6,
-                             vmax=4.6,
-                             levels=50)
+                             cmap=settings["globcolour"]["cmap"],
+                             vmin=settings["globcolour"]["vmin"],
+                             vmax=settings["globcolour"]["vmax"],
+                             levels=settings["globcolour"]["levels"])
     settings.set("tiles_updated", True)
 
 
