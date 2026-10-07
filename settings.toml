@@ -71,6 +71,24 @@ zoom_levels = [0,1,2,3,4,5,6,7,8,9,10]
     vmin = -0.25
     vmax =  0.25
 
+[wam]
+# Equatorial Atlantic, 10S-10N, Gulf of Paria to the Angolan coast.
+cruise_name = "WAM"
+lat1 = -10
+lat2 =  10
+lon1 = -62
+lon2 =  15
+zoom_levels = [0,1,2,3,4,5,6,7,8,9,10]
+[wam.ssh]
+    dynaconf_merge = true
+    vmin = -0.25
+    vmax =  0.25
+[wam.ostia]
+    dynaconf_merge = true
+    vmin = 20
+    vmax = 31
+    cmap="gist_rainbow_r"
+
 [ecoa]
 cruise_name = "ECOA"
 lat1 = 24
