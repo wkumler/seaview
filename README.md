@@ -224,9 +224,9 @@ on it.
 
 - **Deployment:** the server has been running since 2026-10-07 (Steps 1–5 and 7 of
   `server/LIGHTSAIL_GUIDE.md` done). Whether Step 6 (certbot) and Step 8 (snapshot) were completed
-  is unknown; ask before assuming HTTPS works. As of 2026-10-08 the server still ran the WAM-only,
-  zoom 0–10 version; its WAM tiles use the old WAM-only colour ranges and have no `.done` markers, so
-  the first run of the multi-cruise version deletes and regenerates them (intended). The Lightsail region wasn't recorded (Ohio/us-east-2 was suggested,
+  is unknown; ask before assuming HTTPS works. The multi-cruise version (commit `e64de3a`) was deployed
+  on 2026-10-08 and its first run succeeded for all three cruises; the user checked the map and was
+  happy with it, including the shared colour ranges. The Lightsail region wasn't recorded (Ohio/us-east-2 was suggested,
   since obviewer.com is at 18.223.94.213).
 - **Branches** (`origin` = github.com/wkumler/seaview, public): `main` is deployed. The server
   clones `main` into `/opt/seaview`. `wam-upstream` is three commits on upstream `5f89447` and not
@@ -335,6 +335,9 @@ enables the timer. It never restarts a running job.
   `tests/test_cli.py` hangs (it runs real downloads), and 24 other tests fail identically on upstream
   `5f89447` (stale mocks and signatures). Reliable tests: `tests/test_publish.py`,
   `tests/test_tilers_utils.py` (16 pass).
+- Server timing at zoom 0–8 (2026-10-08): Bioreactors took 14.5 min for 9 product-days (~1.5 min each),
+  so a normal run (one new day × 3 cruises × 3 products) takes ~5 min and stays within Lightsail's
+  CPU burst allowance.
 - Benchmarks (at zoom 0–10, before the cut to 0–8): ~30 tiles/s on 4 CPUs; real data on 2 CPUs took ~7.5 min per product-day including
   download. Worker processes peak at ~220 MB each.
 - The EEZ file (`web/data/eez.geojson`, 5.8 MB, 258 features, properties `Country`, `ISO_A3`) is
@@ -358,8 +361,6 @@ enables the timer. It never restarts a running job.
 
 ## Open items
 
-- Shared colour ranges (SST 5–31 °C, SSH ±0.5 m) were picked by the assistant to cover all three
-  boxes; the user hasn't reviewed them on real tiles yet.
 - Station popups have no arrival/departure times; the sheet has no such columns.
 - The sheet still spells "Rio de Janiero" and has no `comments` column (see "Update cruise stations").
 - Optional: link cruise.obviewer.com from obviewer.com; open the upstream PR if the author reappears.
@@ -373,7 +374,5 @@ Known limitations, not fixed (told to the user on 2026-10-08):
   (e.g. new colour ranges), viewers can see old tiles until it expires or they hard-refresh.
 - **Overlapping boxes stack.** SUBSEA and Bioreactors overlap (32°S–17°S). Same colours, but two layers
   at 0.7 opacity look more opaque there.
-- **Untested before deploy:** the reordered `server/Dockerfile` (stub-package install) has not been
-  built anywhere; the job has not run on real data with the shared ranges or the new boxes; the
-  layout hasn't been tried on a phone.
+- The layout hasn't been tried on a phone.
 - The GlobColour NRT dataset version in use retires 2027-01-12 (the code doesn't pin a version).
