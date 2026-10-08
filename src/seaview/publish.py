@@ -1,11 +1,15 @@
 """Daily tile generation for a self-hosted web map.
 
-Each run generates tiles for any of the last ``days`` days that are missing
-from ``tile_dir``, then rewrites the legend colorbars and
-``layer_config.json``. With ``web_dir`` set (the folder the web server
-serves), those two go in its root, next to ``index.html``. Tiles themselves
-are written to ``tile_dir``, which on the server lives inside the web folder
-at ``<web_dir>/tiles/<cruise_name>``.
+Each run handles one cruise (the active settings environment). It generates
+tiles for any of the last ``days`` days that are missing from ``tile_dir``,
+then rewrites that cruise's layer list and the legend in the web folder:
+
+    <web_dir>/tiles/<cruise_name>/<product>/<date>/{z}/{x}/{y}.png   (tile_dir)
+    <web_dir>/layer_config/<cruise_name>.json
+    <web_dir>/colorbars/<product>.png
+
+Colour ranges are shared by all cruises (settings [default]), so cruise tiles
+that overlap on the map use the same scale and there is a single legend.
 """
 import json
 import pathlib
@@ -96,14 +100,20 @@ def build_layer_config(output_dir):
             span = min((found.max() - found.min()).days, settings.get("max_tile_days") - 1)
             dates[product] = dict(start=found.max() - pd.Timedelta(span, "D"), end=found.max())
         layer_config.update_date_ranges(json_file=json_file, layer_dates=dates)
+        # Also list the exact dates, so a day missing from the middle of the range (e.g. no
+        # chlorophyll because it was all cloud) isn't offered as an empty layer.
+        data = json.loads(json_file.read_text())
+        for layer in data["layers"]:
+            start = layer["date_range"]["start"]
+            layer["dates"] = [d for d in finished[layer["id"]] if d >= start]
+        json_file.write_text(json.dumps(data, indent=2))
     return json_file
 
 
 def daily(web_dir=None, days=3):
-    """Run the daily update.
+    """Run the daily update for the active cruise.
 
-    web_dir is where colorbars/ and layer_config.json are written; it
-    defaults to tile_dir.
+    web_dir is the web server's root folder; it defaults to tile_dir.
     """
     print(f"Cruise {settings['cruise_name']}: "
           f"lat {settings['lat1']}..{settings['lat2']}, lon {settings['lon1']}..{settings['lon2']}",
@@ -118,15 +128,17 @@ def daily(web_dir=None, days=3):
         failures += process_day(today - pd.Timedelta(n, "D"))
 
     out = pathlib.Path(web_dir or settings["tile_dir"])
-    out.mkdir(parents=True, exist_ok=True)
+    cruise = settings["cruise_name"]
     with tempfile.TemporaryDirectory() as tmp:
         colorbars.generate(pathlib.Path(tmp) / "colorbars")
         json_file = build_layer_config(tmp)
         print(json_file.read_text(), flush=True)
         shutil.copytree(pathlib.Path(tmp) / "colorbars", out / "colorbars", dirs_exist_ok=True)
         # Write next to the target and rename, so the web server never serves a half-written file.
-        shutil.copy(json_file, out / "layer_config.json.tmp")
-        (out / "layer_config.json.tmp").replace(out / "layer_config.json")
+        target = out / "layer_config" / f"{cruise}.json"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(json_file, target.with_suffix(".json.tmp"))
+        target.with_suffix(".json.tmp").replace(target)
 
     for product, date, err in failures:
         print(f"FAILED {product} {date}: {err}", flush=True)

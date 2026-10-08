@@ -98,6 +98,14 @@ class TestBuildLayerConfig:
         assert layers == {"ssh": {"start": "2026-09-28", "end": "2026-10-05"},
                           "ostia": {"start": "2026-10-04", "end": "2026-10-04"}}
 
+    def test_lists_only_existing_dates(self, tile_dir, temp_dir):
+        for d in ["2026-10-01", "2026-10-02", "2026-10-04"]:  # 10-03 missing
+            finished(tile_dir / "globcolour" / d)
+        out = temp_dir / "out"
+        out.mkdir()
+        data = json.loads(publish.build_layer_config(out).read_text())
+        assert data["layers"][0]["dates"] == ["2026-10-01", "2026-10-02", "2026-10-04"]
+
 
 class TestDaily:
 
@@ -109,7 +117,10 @@ class TestDaily:
                             lambda d: d.mkdir(parents=True) or (d / "ssh.png").write_bytes(b"png"))
         assert publish.daily(web_dir=temp_dir, days=2) == []
         assert len(calls) == 6
-        data = json.loads((temp_dir / "layer_config.json").read_text())
+        data = json.loads((temp_dir / "layer_config" / "WAM.json").read_text())
         assert {l["id"] for l in data["layers"]} == {"ssh", "ostia", "globcolour"}
+        assert data["max_native_zoom"] == max(publish.settings["zoom_levels"])
+        assert data["bounds"] == [[publish.settings["lat1"], publish.settings["lon1"]],
+                                  [publish.settings["lat2"], publish.settings["lon2"]]]
         assert (temp_dir / "colorbars" / "ssh.png").is_file()
-        assert not (temp_dir / "layer_config.json.tmp").exists()
+        assert not (temp_dir / "layer_config" / "WAM.json.tmp").exists()

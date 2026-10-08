@@ -23,16 +23,19 @@ remote_tile_dir = "@format {this.remote_html_dir}/tiles/{this.cruise_name}"
     vmin=-6000
     vmax=0
     levels = 61
+# Colour ranges are shared by every cruise, so overlapping cruise tiles use the same scale
+# and one legend. They cover 50S (~5 C) to the equator (~30 C) and the Brazil-Malvinas
+# Confluence eddies. Don't override them per cruise.
 [default.ssh]
-    vmin = -0.75
-    vmax = 0.75
-    levels = 20
+    vmin = -0.5
+    vmax = 0.5
+    levels = 21
     cmap="matplotlib:RdBu_r"
 [default.ostia]
-    vmin = 10
-    vmax = 35
-    levels = 20
-    cmap="tol:rainbow_WhBr"
+    vmin = 5
+    vmax = 31
+    levels = 27
+    cmap="gist_rainbow_r"
 [default.globcolour]
     vmin = -4.6
     vmax = 4.6
@@ -42,22 +45,31 @@ remote_tile_dir = "@format {this.remote_html_dir}/tiles/{this.cruise_name}"
 # --- Directories for data ---
 #
 
+# Cruise boxes below are the station extent plus a 5 degree margin, rounded out.
+# Tiles are served by the same web server as the map (server/), so remote_url is
+# empty and the tile base_url in each layer config is the relative "/tiles/<cruise_name>".
+
+[bioreactors]
+# Bioreactors I: Puerto Madryn to Rio de Janeiro.
+cruise_name = "Bioreactors"
+remote_url = ""
+remote_sync = false
+lat1 = -50
+lat2 = -17
+lon1 = -71
+lon2 = -19
+zoom_levels = [0,1,2,3,4,5,6,7,8]
+
 [subsea]
+# SUBSEA I: Rio de Janeiro to Salvador.
 cruise_name = "SubSea"
-lat1 = -55
-lat2 = -10
-lon1 = -75
-lon2 = -5
-zoom_levels = [0,1,2,3,4,5,6,7,8,9,10]
-[subsea.ssh]
-    dynaconf_merge = true
-    vmin = -0.25
-    vmax =  0.25
-[subsea.ostia]
-    dynaconf_merge = true
-    vmin = 15
-    vmax = 30
-    cmap="gist_rainbow_r"
+remote_url = ""
+remote_sync = false
+lat1 = -32
+lat2 = -8
+lon1 = -48
+lon2 = -20
+zoom_levels = [0,1,2,3,4,5,6,7,8]
 
 [omi]
 cruise_name = "OceanMargins"
@@ -72,9 +84,7 @@ zoom_levels = [0,1,2,3,4,5,6,7,8,9,10]
     vmax =  0.25
 
 [wam]
-# Equatorial Atlantic, 10S-10N, Gulf of Paria to the Angolan coast.
-# Tiles are served by the same web server as the map (server/), so the tile
-# base_url in layer_config.json is the relative "/tiles/WAM".
+# WAM I: equatorial Atlantic, 10S-10N, Gulf of Paria to the Angolan coast.
 cruise_name = "WAM"
 remote_url = ""
 remote_sync = false
@@ -83,15 +93,6 @@ lat2 =  10
 lon1 = -62
 lon2 =  15
 zoom_levels = [0,1,2,3,4,5,6,7,8]  # data is 4-14 km; the map stretches z8 tiles beyond this
-[wam.ssh]
-    dynaconf_merge = true
-    vmin = -0.25
-    vmax =  0.25
-[wam.ostia]
-    dynaconf_merge = true
-    vmin = 20
-    vmax = 31
-    cmap="gist_rainbow_r"
 
 [ecoa]
 cruise_name = "ECOA"

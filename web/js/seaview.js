@@ -16,10 +16,17 @@
 
     // --- Station layers ----------------------------------------------------
 
-    function stationPopupHtml(p) {
-        var html = '<b>Station:</b> ' + (p.name || 'N/A') + '<br>' +
-                   '<b>Arrival:</b> ' + (p.arrive || 'N/A') + '<br>' +
-                   '<b>Departure:</b> ' + (p.departure || 'N/A') + '<br>';
+    function formatLatLng(latLng) {
+        return Math.abs(latLng[0]).toFixed(3) + '°' + (latLng[0] < 0 ? 'S' : 'N') + ', ' +
+               Math.abs(latLng[1]).toFixed(3) + '°' + (latLng[1] < 0 ? 'W' : 'E');
+    }
+
+    // Only fields that have a value are shown.
+    function stationPopupHtml(p, latLng) {
+        var html = '<b>Station:</b> ' + (p.name || 'Station') + '<br>' +
+                   '<b>Position:</b> ' + formatLatLng(latLng) + '<br>';
+        if (p.arrive) html += '<b>Arrival:</b> ' + p.arrive + '<br>';
+        if (p.departure) html += '<b>Departure:</b> ' + p.departure + '<br>';
         if (p.depth) html += '<b>Depth:</b> ' + p.depth + '<br>';
         if (p.duration) html += '<b>Duration:</b> ' + p.duration + '<br>';
         if (p.comments) html += '<b>Comments:</b> ' + p.comments + '<br>';
@@ -39,8 +46,8 @@
                     color: cruise.color, fillColor: cruise.color,
                     weight: 3, opacity: 1, fillOpacity: 0.6, radius: 8
                 })
-                    .bindTooltip((p.name || 'Station') + ' - ' + (p.arrive || 'N/A'))
-                    .bindPopup(stationPopupHtml(p), {maxWidth: 300})
+                    .bindTooltip((p.name || 'Station') + (p.arrive ? ' - ' + p.arrive : ''))
+                    .bindPopup(stationPopupHtml(p, latLng), {maxWidth: 300})
                     .addTo(group);
             });
             if (coords.length > 1) {
@@ -147,7 +154,8 @@
         var box = L.DomUtil.create('div', 'colorbar-box hidden', map.getContainer());
         box.innerHTML = '<div class="colorbar-box-title">Legend</div><div class="colorbar-box-content">' +
             colorbars.map(function (c) {
-                return '<div class="colorbar-container"><img src="' + c.src + '" alt="' + c.alt + '" title="' + c.alt + '"></div>';
+                return '<div class="colorbar-container"><img src="' + c.src + '" alt="' + c.alt + '" title="' + c.alt +
+                       '" onerror="this.parentNode.hidden = true"></div>';
             }).join('') + '</div>';
         L.DomEvent.disableClickPropagation(box);
         L.DomEvent.disableScrollPropagation(box);
@@ -168,36 +176,62 @@
         return dates;
     }
 
-    function dynamicLayers(map, configUrl, refreshMs) {
-        var layers = {}, control = null;
+    // Each cruise has its own tile set (layer_config/<cruise>.json). The date panel lists every
+    // product and date found in any cruise; a ticked date is drawn for every cruise whose station
+    // layer is switched on. All cruises share one colour scale, so overlapping tiles agree.
+    function dynamicLayers(map, cruises, refreshMs) {
+        var dateGroups = {}, tiles = [], control = null;
 
-        function update(config) {
-            var visible = new Set(Object.keys(layers).filter(function (k) { return map.hasLayer(layers[k]); }));
-            Object.values(layers).forEach(function (l) { map.removeLayer(l); });
+        // Show or hide each cruise's tiles to match its station layer.
+        function sync() {
+            tiles.forEach(function (t) {
+                var group = dateGroups[t.key];
+                if (map.hasLayer(t.cruise.layer)) group.addLayer(t.layer);
+                else group.removeLayer(t.layer);
+            });
+        }
+
+        function update(configs) {
+            var selected = new Set(Object.keys(dateGroups).filter(function (k) { return map.hasLayer(dateGroups[k]); }));
+            Object.values(dateGroups).forEach(function (g) { map.removeLayer(g); });
             if (control) map.removeControl(control);
-            layers = {};
+            dateGroups = {};
+            tiles = [];
 
-            // base_url may be absolute or relative to the page
-            var baseUrl = resolveUrl(config.base_url.replace(/\/+$/, '') + '/');
-            var grouped = {};
-            config.layers.forEach(function (lc) {
-                grouped[lc.name] = {};
-                dateRange(lc.date_range.start, lc.date_range.end).forEach(function (date) {
-                    var url = lc.url_template.replace('{base_url}/', baseUrl).replace('{base_url}', baseUrl)
-                                             .replace('{date}', date);
-                    var key = lc.id + '_' + date;
-                    layers[key] = L.tileLayer(url, {
-                        attribution: lc.attribution, opacity: 0.7,
-                        // Past the deepest generated zoom, stretch those tiles instead of going blank.
-                        maxNativeZoom: config.max_native_zoom || 10,
-                        bounds: config.bounds
+            var products = {};  // id -> {name, dates: Set}, in first-seen order
+            configs.forEach(function (entry) {
+                var config = entry.config;
+                // base_url may be absolute or relative to the page
+                var baseUrl = resolveUrl(config.base_url.replace(/\/+$/, '') + '/');
+                config.layers.forEach(function (lc) {
+                    var product = products[lc.id] = products[lc.id] || {name: lc.name, dates: new Set()};
+                    (lc.dates || dateRange(lc.date_range.start, lc.date_range.end)).forEach(function (date) {
+                        product.dates.add(date);
+                        var url = lc.url_template.replace('{base_url}/', baseUrl).replace('{base_url}', baseUrl)
+                                                 .replace('{date}', date);
+                        tiles.push({cruise: entry.cruise, key: lc.id + '_' + date, layer: L.tileLayer(url, {
+                            attribution: lc.attribution, opacity: 0.7,
+                            // Past the deepest generated zoom, stretch those tiles instead of going blank.
+                            maxNativeZoom: config.max_native_zoom || 10,
+                            bounds: config.bounds
+                        })});
                     });
-                    grouped[lc.name][date] = layers[key];
                 });
             });
 
+            var grouped = {};
+            Object.keys(products).forEach(function (id) {
+                grouped[products[id].name] = {};
+                Array.from(products[id].dates).sort().forEach(function (date) {
+                    var key = id + '_' + date;
+                    dateGroups[key] = L.layerGroup();
+                    grouped[products[id].name][date] = dateGroups[key];
+                });
+            });
+            sync();
+
             control = L.control.groupedLayers(null, grouped, {collapsed: false, position: 'topleft'}).addTo(map);
-            Object.keys(layers).forEach(function (k) { if (visible.has(k)) layers[k].addTo(map); });
+            Object.keys(dateGroups).forEach(function (k) { if (selected.has(k)) dateGroups[k].addTo(map); });
 
             var el = control.getContainer();
             var link = L.DomUtil.create('a', 'layer-refresh-link', el);
@@ -207,10 +241,19 @@
         }
 
         function load() {
-            fetchJSON(configUrl + '?t=' + Date.now()).then(update)
-                .catch(function (err) { console.error('[DynamicLayers]', err); });
+            // A cruise whose layer list is missing (no tiles yet) is skipped, not fatal.
+            Promise.all(cruises.map(function (c) {
+                return fetchJSON(c.layer_config + '?t=' + Date.now())
+                    .then(function (config) { return {cruise: c, config: config}; })
+                    .catch(function (err) { console.warn('[DynamicLayers] ' + c.name, err.message); return null; });
+            })).then(function (results) {
+                update(results.filter(Boolean));
+            });
         }
 
+        map.on('overlayadd overlayremove', function (e) {
+            if (cruises.some(function (c) { return c.layer === e.layer; })) sync();
+        });
         load();
         if (refreshMs > 0) setInterval(load, refreshMs);
         window.refreshDynamicLayers = load;
@@ -264,10 +307,12 @@
         var overlays = {};
         if (cfg.eez) overlays['EEZ Boundaries'] = eezLayer(cfg.eez);
         overlays['Night/Day'] = L.terminator().addTo(map);
+        var tiledCruises = [];
         (cfg.cruises || []).forEach(function (c) {
             var layer = stationLayer(c);
             if (c.visible !== false) layer.addTo(map);
             overlays[c.name] = layer;
+            if (c.layer_config) tiledCruises.push({name: c.name, layer: layer, layer_config: c.layer_config});
         });
         if (cfg.ship) {
             var ship = shipLayers(cfg.ship);
@@ -280,7 +325,7 @@
         var baseChoices = Object.keys(basemaps).length > 1 ? basemaps : {};
         L.control.layers(baseChoices, overlays, {position: 'topright', collapsed: false, autoZIndex: true}).addTo(map);
 
-        if (cfg.layer_config) dynamicLayers(map, cfg.layer_config, cfg.layer_refresh_ms || 0);
+        if (tiledCruises.length) dynamicLayers(map, tiledCruises, cfg.layer_refresh_ms || 0);
     }
 
     fetchJSON('site_config.json').then(init).catch(function (err) {

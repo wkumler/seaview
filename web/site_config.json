@@ -8,7 +8,6 @@
     "zoom": 4,
     "max_zoom": 12
   },
-  "layer_config": "layer_config.json",
   "layer_refresh_ms": 300000,
   "basemaps": [
     {
@@ -24,17 +23,20 @@
     {
       "name": "Bioreactors I",
       "stations": "data/stations/bioreactors.geojson",
-      "color": "green"
+      "color": "green",
+      "layer_config": "layer_config/Bioreactors.json"
     },
     {
       "name": "SUBSEA I",
       "stations": "data/stations/subsea.geojson",
-      "color": "gray"
+      "color": "gray",
+      "layer_config": "layer_config/SubSea.json"
     },
     {
       "name": "WAM I",
       "stations": "data/stations/wam.geojson",
-      "color": "#d62728"
+      "color": "#d62728",
+      "layer_config": "layer_config/WAM.json"
     }
   ],
   "ship": {

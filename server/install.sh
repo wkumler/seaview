@@ -43,13 +43,11 @@ docker image prune -f >/dev/null
 
 step "Copying web files to $WEB"
 mkdir -p "$WEB/tiles" /var/lib/seaview/data /etc/seaview
-# tiles/, colorbars/ and layer_config.json belong to the daily job: never overwrite or delete them.
+# tiles/, colorbars/ and layer_config/ belong to the daily job: never overwrite or delete them.
 rsync -a --delete \
-    --exclude 'tiles/' --exclude 'colorbars/' --exclude 'layer_config.json' \
+    --exclude 'tiles/' --exclude 'colorbars/' --exclude 'layer_config/' \
     --exclude 'README.md' --exclude '*.py' \
     "$REPO_DIR/web/" "$WEB/"
-[[ -d "$WEB/colorbars" ]] || cp -r "$REPO_DIR/web/colorbars" "$WEB/colorbars"
-[[ -f "$WEB/layer_config.json" ]] || echo '{"base_url": "/tiles/WAM", "layers": []}' > "$WEB/layer_config.json"
 
 step "Configuring nginx for $DOMAIN"
 if [[ -f /etc/nginx/sites-available/cruise ]]; then

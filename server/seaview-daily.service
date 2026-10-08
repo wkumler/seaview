@@ -6,17 +6,8 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-# Cruise environment from settings.toml and how many past days to fill in.
-Environment=CRUISE=wam DAYS=3
-ExecStart=/usr/bin/docker run --rm --name seaview-daily \
-    --env-file /etc/seaview/cmems.env \
-    -e SEAVIEW_BASE_TILE_DIR=/srv/cruise/tiles \
-    -e SEAVIEW_BASE_DATA_DIR=/var/lib/seaview/data \
-    -e SEAVIEW_WEB_DIR=/srv/cruise \
-    -e PYTHONUNBUFFERED=1 \
-    -e TQDM_DISABLE=1 \
-    -v /srv/cruise:/srv/cruise \
-    -v /var/lib/seaview:/var/lib/seaview \
-    seaview-daily daily --env ${CRUISE} --days ${DAYS}
+# Cruise environments from settings.toml, processed in this order, and how many past days to fill in.
+Environment="CRUISES=wam subsea bioreactors" DAYS=3
+ExecStart=/bin/bash /opt/seaview/server/run-daily.sh
 # A run normally takes minutes; the limit stays below the 12 h between scheduled runs.
 TimeoutStartSec=11h

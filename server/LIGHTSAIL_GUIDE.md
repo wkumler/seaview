@@ -193,7 +193,8 @@ All commands run in the Lightsail browser terminal (**Connect using SSH**).
 | See when the job runs next | `systemctl list-timers seaview-daily` |
 | Read the last run's log | `sudo journalctl -u seaview-daily -n 100 --no-pager` |
 | Run the job now | `sudo systemctl start --no-block seaview-daily` |
-| Redo one day (e.g. after changing colour ranges) | `sudo rm -rf /srv/cruise/tiles/WAM/ostia/2026-10-05`, then run the job |
+| Redo one day | `sudo rm -rf /srv/cruise/tiles/WAM/ostia/2026-10-05`, then run the job |
+| Redo everything (e.g. after changing colour ranges) | `sudo rm -rf /srv/cruise/tiles/*`, then run the job |
 | Change the Copernicus password | `sudo rm /etc/seaview/cmems.env`, then re-run the installer |
 | Check free disk space | `df -h /` (tiles use ~165 MB/day; 80 GB lasts well over a year) |
 | Pause the daily job | `sudo systemctl disable --now seaview-daily.timer` (resume with `enable --now`) |

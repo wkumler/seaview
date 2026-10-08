@@ -29,9 +29,21 @@ self-contained server setup. The original README, with the Python API reference,
 Satellite layers are listed by date (the last 8 days available). Data for a day is normally
 published by Copernicus the following day, sometimes later for chlorophyll.
 
-**WAM region:** 10°S–10°N, 62°W–15°E. Tiles are made for zoom levels 0–8 (about 0.6 km per
-pixel, finer than the 4–14 km data); the map can zoom to 12 and stretches the zoom-8 tiles.
-**Colour ranges:** SSH −0.25 to +0.25 m · SST 20–31 °C · Chl 0.01–100 mg/m³ (log scale).
+Each cruise has its own satellite tile set, covering a box around its stations. Ticking a date
+draws it for every cruise whose station layer is switched on, so unticking a cruise also hides its
+satellite tiles. All cruises share **one colour scale** and one legend, so where boxes overlap the
+colours agree:
+
+| Cruise | Box | Settings section |
+| --- | --- | --- |
+| WAM I | 10°S–10°N, 62°W–15°E | `[wam]` |
+| SUBSEA I | 32°S–8°S, 48°W–20°W | `[subsea]` |
+| Bioreactors I | 50°S–17°S, 71°W–19°W | `[bioreactors]` |
+
+**Colour ranges (all cruises):** SST 5–31 °C in 1 °C steps · SSH −0.5 to +0.5 m in 0.05 m steps ·
+Chl 0.01–100 mg/m³ (log scale).
+Tiles are made for zoom levels 0–8 (about 0.6 km per pixel, finer than the 4–14 km data). The map
+can zoom to 12 and stretches the zoom-8 tiles.
 
 ---
 
@@ -52,7 +64,8 @@ pixel, finer than the 4–14 km data); the map can zoom to 12 and stretches the 
 - **Domain:** an `A` record `cruise` → the static IP, in Hover's DNS for obviewer.com.
   obviewer.com itself runs elsewhere, behind Basecamp login, and is unaffected.
 - **HTTPS:** a free Let's Encrypt certificate (certbot) that renews automatically.
-- **Daily job:** a systemd timer runs `sea daily` in Docker. It fills in any of the last 3 days
+- **Daily job:** a systemd timer runs `sea daily` in Docker once per cruise (WAM, then SUBSEA,
+  then Bioreactors). For each, it fills in any of the last 3 days
   that are missing, skips days already done, and retries data that isn't published yet on the
   next run. Each finished day gets a `.done` marker; a day cut off by a reboot or time limit
   has none, so it's deleted and redone rather than shown half-finished. At zoom 0–8 a product-day
@@ -75,7 +88,8 @@ Server commands run in the Lightsail browser terminal: Lightsail console → `cr
 | Show only failures | `sudo journalctl -u seaview-daily --no-pager \| grep FAILED` |
 | Run the job now | `sudo systemctl start --no-block seaview-daily` |
 | Watch a run live (Ctrl+C stops watching, not the job) | `sudo journalctl -u seaview-daily -f` |
-| Redo one day (e.g. after changing colours) | `sudo rm -rf /srv/cruise/tiles/WAM/ostia/2026-10-05`, then run the job |
+| Redo one day | `sudo rm -rf /srv/cruise/tiles/WAM/ostia/2026-10-05`, then run the job |
+| Redo everything (e.g. after changing colour ranges) | `sudo rm -rf /srv/cruise/tiles/*`, then run the job (it rebuilds the last 3 days) |
 | Change the Copernicus password | `sudo rm /etc/seaview/cmems.env`, then re-run the installer |
 | Check free disk space | `df -h /` (80 GB holds well over a year of tiles) |
 | Pause / resume the daily job | `sudo systemctl disable --now seaview-daily.timer` / `sudo systemctl enable --now seaview-daily.timer` |
@@ -112,27 +126,27 @@ sheet: the sheet spells "Rio de Janiero" (the map currently shows the corrected 
 and the sheet has no `comments` column, so the port descriptions such as "Tema, Ghana (start)"
 would be dropped. Fix the spelling and add a `comments` column to the sheet first.
 
-### Add a cruise to the map
+### Add a cruise (stations and satellite tiles)
 
 1. Create its station file as above.
-2. Add it to `cruises` in [web/site_config.json](web/site_config.json):
-   `{"name": "WAM II", "stations": "data/stations/wam2.geojson", "color": "#1f77b4"}`.
-   Layers appear in the order listed.
+2. Add a section to [settings.toml](settings.toml), modelled on `[subsea]`: a `cruise_name` (used
+   in the tile and layer-list paths), `remote_url = ""`, `remote_sync = false`, the box
+   (`lat1/lat2/lon1/lon2`: station extent plus a 5° margin) and `zoom_levels = [0,...,8]`.
+   **Don't add colour ranges**; every cruise shares the ones in `[default]`.
+3. Add the section name to `CRUISES=` in [server/seaview-daily.service](server/seaview-daily.service).
+4. Add it to `cruises` in [web/site_config.json](web/site_config.json):
+   `{"name": "WAM II", "stations": "data/stations/wam2.geojson", "color": "#1f77b4", "layer_config": "layer_config/<cruise_name>.json"}`.
+   Layers appear in the order listed. Leave out `layer_config` for a cruise with stations only.
 
-### Change colour ranges or the region
+A cruise's satellite layers appear after its first job run.
 
-Edit the `[wam]` section of [settings.toml](settings.toml) (`lat1/lat2/lon1/lon2`, `zoom_levels`,
-and `vmin/vmax/cmap` under `[wam.ssh]`, `[wam.ostia]`). After pushing and re-running the
-installer, new days use the new settings. To redo existing days, delete their folders on the
-server (see the table) and run the job. The legend updates by itself.
+### Change colour ranges or a cruise's box
 
-### Switch the daily job to a different cruise
-
-1. Add a section for it in `settings.toml`, modelled on `[wam]`. Keep `remote_url = ""` and
-   `remote_sync = false`.
-2. Change `CRUISE=wam` in [server/seaview-daily.service](server/seaview-daily.service).
-3. Change `base_url` in the placeholder `web/layer_config.json` and the map centre in
-   `web/site_config.json`.
+Colour ranges are in `[default.ssh]`, `[default.ostia]` and `[default.globcolour]` in
+`settings.toml` and apply to every cruise. Boxes and zoom levels are in each cruise's section.
+After pushing and re-running the installer, new days use the new settings. Existing tiles keep
+the old colours until redone: delete them on the server (see the table) and run the job. The
+legend updates by itself. Browsers may keep showing old tiles for up to a day; Ctrl+F5 refreshes.
 
 ### Other settings in `web/site_config.json`
 
@@ -185,7 +199,7 @@ unattached one is billed.
 | `web/site_config.json` | Page title, map centre, cruises shown, ship feed, legend |
 | `web/data/stations/*.geojson` | Station lists |
 | `server/` | Install script, nginx config, systemd timer, Dockerfile, setup guide |
-| `settings.toml` | Cruise regions, zoom levels, colour ranges (`[wam]` is the active one) |
+| `settings.toml` | Shared colour ranges (`[default]`), each cruise's box and zoom levels (`[wam]`, `[subsea]`, `[bioreactors]`) |
 | `src/seaview/` | Python package: data download (`data_sources/`), tiling (`tilers/`, `tile.py`), daily job (`publish.py`), legends (`colorbars.py`), CLI (`cli.py`) |
 | `docs/` | Upstream documentation, the original README, and the backup PR text |
 
@@ -208,10 +222,11 @@ on it.
 
 ## Current state
 
-- **Deployment:** the user was following `server/LIGHTSAIL_GUIDE.md` and had reached Step 7 (first
-  tile run) on 2026-10-07. Steps 1–5 were done (instance, static IP, firewall, Hover DNS,
-  install). Whether Step 6 (certbot) and Step 8 (snapshot) were completed is unknown. Ask before
-  assuming HTTPS works. The Lightsail region wasn't recorded (Ohio/us-east-2 was suggested,
+- **Deployment:** the server has been running since 2026-10-07 (Steps 1–5 and 7 of
+  `server/LIGHTSAIL_GUIDE.md` done). Whether Step 6 (certbot) and Step 8 (snapshot) were completed
+  is unknown; ask before assuming HTTPS works. As of 2026-10-08 the server still ran the WAM-only,
+  zoom 0–10 version; its WAM tiles use the old WAM-only colour ranges and have no `.done` markers, so
+  the first run of the multi-cruise version deletes and regenerates them (intended). The Lightsail region wasn't recorded (Ohio/us-east-2 was suggested,
   since obviewer.com is at 18.223.94.213).
 - **Branches** (`origin` = github.com/wkumler/seaview, public): `main` is deployed. The server
   clones `main` into `/opt/seaview`. `wam-upstream` is three commits on upstream `5f89447` and not
@@ -224,27 +239,35 @@ on it.
 
 - systemd `seaview-daily.timer` (OnCalendar 06,18:00 UTC, Persistent=true) → `seaview-daily.service`
   (oneshot, TimeoutStartSec=11h) → `docker run seaview-daily daily --env ${CRUISE} --days ${DAYS}`
-  with `CRUISE=wam DAYS=3`, `--env-file /etc/seaview/cmems.env`, and
+  via `server/run-daily.sh`, which loops over `CRUISES="wam subsea bioreactors"` (one container per
+  cruise, `docker rm -f` of a stale same-named container first; a failure doesn't stop the others but
+  makes the run exit 1), `DAYS=3`, `--env-file /etc/seaview/cmems.env`, and
   `SEAVIEW_BASE_TILE_DIR=/srv/cruise/tiles`, `SEAVIEW_BASE_DATA_DIR=/var/lib/seaview/data`,
   `SEAVIEW_WEB_DIR=/srv/cruise`, `TQDM_DISABLE=1`.
 - `seaview.publish.daily(web_dir, days)`: for each of yesterday back to `days` ago, and each product
   in `settings.updated_tiles` (`globcolour, ostia, ssh`), skips if `tile_dir/<product>/<date>/.done`
   exists, else deletes any leftover directory and calls `tile.<product>(dtm, force=False)`, then writes
   `.done`. At the start of each run, `remove_unfinished()` deletes every date directory without
-  `.done`, and `layer_config` lists only dates with `.done`. Afterwards it regenerates `colorbars/*.png` and
-  `layer_config.json` (written atomically) into `web_dir`. `layer_config.json` also carries
+  `.done`, and `layer_config` lists only dates with `.done`. Afterwards it regenerates `web_dir/colorbars/*.png`
+  (shared by all cruises) and `web_dir/layer_config/<cruise_name>.json` (written atomically). Each layer
+  in it has `date_range` and an explicit `dates` list (only finished days). The file also carries
   `max_native_zoom` (max of `zoom_levels`) and `bounds` (the region box). The map uses them for
   `maxNativeZoom` (stretch tiles beyond that zoom instead of requesting missing ones) and to avoid
   requesting tiles outside the region. It exits 1 only on real exceptions.
-- `tile_dir` = `{base_tile_dir}/{cruise_name}` = `/srv/cruise/tiles/WAM`. Dynaconf env `[wam]` sets
-  `remote_url = ""`, so `layer_config.base_url` = `/tiles/WAM` (relative, same origin as the map).
-- Web map: `web/index.html` + `web/js/seaview.js` read `site_config.json`, then `layer_config.json`
+- `tile_dir` = `{base_tile_dir}/{cruise_name}`, e.g. `/srv/cruise/tiles/WAM`, `.../SubSea`,
+  `.../Bioreactors`. The cruise envs set `remote_url = ""`, so `base_url` = `/tiles/<cruise_name>`
+  (relative, same origin as the map). Colour ranges live only in `[default]`, so all cruises match.
+- Web map: `web/index.html` + `web/js/seaview.js` read `site_config.json`, then each cruise's
+  `layer_config` (`cruises[].layer_config`). One grouped "date" panel lists the union of products and
+  dates. Each entry is an `L.layerGroup` holding the tile layers of the cruises whose station layer is
+  on; `overlayadd/overlayremove` on a station layer re-syncs the groups. Missing configs are skipped.
   (re-fetched every 5 minutes and by the "Refresh layers" link). Satellite layers use a grouped
   layer control (one checkbox per date). Vendored Leaflet 1.9.3 plus plugins (realtime, grouped
   layers, mouse position, fullscreen, terminator). The graticule and ruler were extracted verbatim
   from the folium page into `web/vendor/leaflet.graticule.js` and `web/js/ruler.js`.
 - nginx (`server/nginx-cruise.conf` → `/etc/nginx/sites-available/cruise`): root `/srv/cruise`, gzip
-  for json/geojson/js/css, `Cache-Control` no-cache for `layer_config.json` and `colorbars/`, 1 day for
+  for json/geojson/js/css, `Cache-Control` no-cache for `colorbars/` (and a legacy `/layer_config.json`
+  rule), 5 minutes for `layer_config/*.json` via `location /`, 1 day for
   `tiles/`, 5 minutes for everything else; `.geojson` served as `application/geo+json`.
 
 ## install.sh contract (idempotent)
@@ -252,7 +275,7 @@ on it.
 Runs apt (nginx, certbot, python3-certbot-nginx, docker.io, docker-buildx, rsync, git), adds 2 GB swap
 if none, `git pull --ff-only` in `/opt/seaview`, `docker build -f server/Dockerfile -t seaview-daily`,
 rsyncs `web/` → `/srv/cruise` with `--delete` but **excluding** `tiles/`, `colorbars/`,
-`layer_config.json`, `README.md`, `*.py`. It writes the nginx site **only if it doesn't exist**,
+`layer_config/`, `README.md`, `*.py`. It writes the nginx site **only if it doesn't exist**,
 because certbot edits it, so nginx template changes must be applied by hand on the server. It
 prompts for Copernicus credentials only if `/etc/seaview/cmems.env` is missing, then installs and
 enables the timer. It never restarts a running job.
@@ -335,8 +358,22 @@ enables the timer. It never restarts a running job.
 
 ## Open items
 
-- SSH range: nearly all of the WAM region came out positive with ±0.25 m. −0.1 to +0.3 m was
-  suggested, but the user hasn't decided.
+- Shared colour ranges (SST 5–31 °C, SSH ±0.5 m) were picked by the assistant to cover all three
+  boxes; the user hasn't reviewed them on real tiles yet.
 - Station popups have no arrival/departure times; the sheet has no such columns.
 - The sheet still spells "Rio de Janiero" and has no `comments` column (see "Update cruise stations").
 - Optional: link cruise.obviewer.com from obviewer.com; open the upstream PR if the author reappears.
+
+Known limitations, not fixed (told to the user on 2026-10-08):
+- **No failure alerts.** A failed run only shows in `systemctl status` / the journal. Nobody is
+  notified (no email/Slack hook).
+- **Nothing is ever pruned.** Tiles older than the 8 listed days and the downloaded NetCDF files in
+  `/var/lib/seaview/data` accumulate. Small at zoom 0–8, but unbounded.
+- **Browser tile cache is 1 day** (`/tiles/` max-age=86400). After regenerating tiles at the same URLs
+  (e.g. new colour ranges), viewers can see old tiles until it expires or they hard-refresh.
+- **Overlapping boxes stack.** SUBSEA and Bioreactors overlap (32°S–17°S). Same colours, but two layers
+  at 0.7 opacity look more opaque there.
+- **Untested before deploy:** the reordered `server/Dockerfile` (stub-package install) has not been
+  built anywhere; the job has not run on real data with the shared ranges or the new boxes; the
+  layout hasn't been tried on a phone.
+- The GlobColour NRT dataset version in use retires 2027-01-12 (the code doesn't pin a version).

@@ -115,7 +115,8 @@ def ssh(dtm, verbose=True, force=True):
                              settings["zoom_levels"],
                              cmap=settings["ssh"]["cmap"],
                              vmin=settings["ssh"]["vmin"],
-                             vmax=settings["ssh"]["vmax"])
+                             vmax=settings["ssh"]["vmax"],
+                             levels=settings["ssh"]["levels"])
     settings.set("tiles_updated", True)
 
 
@@ -176,7 +177,8 @@ def ostia(dtm, verbose=True, force=True):
                              settings["zoom_levels"],
                              cmap=settings["ostia"]["cmap"],
                              vmin=settings["ostia"]["vmin"],
-                             vmax=settings["ostia"]["vmax"])
+                             vmax=settings["ostia"]["vmax"],
+                             levels=settings["ostia"]["levels"])
     settings.set("tiles_updated", True)
 
 
