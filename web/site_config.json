@@ -5,7 +5,8 @@
       1.0,
       -17.0
     ],
-    "zoom": 4
+    "zoom": 4,
+    "max_zoom": 12
   },
   "layer_config": "layer_config.json",
   "layer_refresh_ms": 300000,
@@ -14,7 +15,7 @@
       "name": "Esri Ocean",
       "url": "https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}",
       "attribution": "Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri",
-      "maxZoom": 10,
+      "maxNativeZoom": 10,
       "default": true
     }
   ],

@@ -20,6 +20,24 @@ from .utils import DataObjectError
 settings = config.settings
 
 PRODUCTS = {"ssh": tile.ssh, "ostia": tile.ostia, "globcolour": tile.globcolour}
+# Written into a date directory once all of its tiles exist. A directory
+# without it was interrupted (timeout, reboot) and is redone, not published.
+DONE = ".done"
+
+
+def completed_dates(product):
+    """Dates (directory names) of finished tile sets for one product."""
+    base = pathlib.Path(settings["tile_dir"]) / product
+    return sorted(d.name for d in base.glob("*") if (d / DONE).is_file())
+
+
+def remove_unfinished():
+    """Delete date directories left behind by an interrupted run."""
+    for product in settings["updated_tiles"]:
+        for d in (pathlib.Path(settings["tile_dir"]) / product).glob("*"):
+            if d.is_dir() and not (d / DONE).is_file():
+                print(f"{product} {d.name}: removing unfinished tiles", flush=True)
+                shutil.rmtree(d, ignore_errors=True)
 
 
 def process_day(dtm):
@@ -31,8 +49,9 @@ def process_day(dtm):
     failures = []
     for product in settings["updated_tiles"]:
         out = pathlib.Path(settings["tile_dir"]) / product / date
-        if out.is_dir():
+        if (out / DONE).is_file():
             continue
+        shutil.rmtree(out, ignore_errors=True)  # leftovers of an interrupted run
         print(f"{product} {date}: generating", flush=True)
         try:
             PRODUCTS[product](dtm, verbose=False, force=False)
@@ -47,6 +66,7 @@ def process_day(dtm):
             failures.append((product, date, repr(err)))
             continue
         if out.is_dir():
+            (out / DONE).touch()
             print(f"{product} {date}: done", flush=True)
         else:
             print(f"{product} {date}: no data available yet", flush=True)
@@ -54,23 +74,25 @@ def process_day(dtm):
 
 
 def build_layer_config(output_dir):
-    """Write layer_config.json for the tiles present in tile_dir.
+    """Write layer_config.json for the finished tile sets in tile_dir.
 
-    Products without any tiles are left out instead of advertising dates
-    that do not exist.
+    Products without any finished tiles are left out instead of advertising
+    dates that do not exist.
     """
-    tile_dir = pathlib.Path(settings["tile_dir"])
-    available = [p for p in settings["updated_tiles"]
-                 if any((tile_dir / p).glob("*"))]
+    finished = {p: completed_dates(p) for p in settings["updated_tiles"]}
+    available = [p for p in settings["updated_tiles"] if finished[p]]
     layer_config.generate_file(json_file_path=output_dir)
     json_file = pathlib.Path(output_dir) / "layer_config.json"
     data = json.loads(json_file.read_text())
     data["layers"] = [l for l in data["layers"] if l["id"] in available]
+    # The map stretches tiles past max_native_zoom and requests nothing outside bounds.
+    data["max_native_zoom"] = max(settings["zoom_levels"])
+    data["bounds"] = [[settings["lat1"], settings["lon1"]], [settings["lat2"], settings["lon2"]]]
     json_file.write_text(json.dumps(data, indent=2))
     if available:
         dates = {}
         for product in available:
-            found = pd.to_datetime([d.name for d in (tile_dir / product).glob("*")])
+            found = pd.to_datetime(finished[product])
             span = min((found.max() - found.min()).days, settings.get("max_tile_days") - 1)
             dates[product] = dict(start=found.max() - pd.Timedelta(span, "D"), end=found.max())
         layer_config.update_date_ranges(json_file=json_file, layer_dates=dates)
@@ -86,6 +108,8 @@ def daily(web_dir=None, days=3):
     print(f"Cruise {settings['cruise_name']}: "
           f"lat {settings['lat1']}..{settings['lat2']}, lon {settings['lon1']}..{settings['lon2']}",
           flush=True)
+
+    remove_unfinished()
 
     # NRT products for a given day appear the following day, so start at yesterday.
     today = pd.Timestamp.now(tz="UTC").normalize().tz_localize(None)

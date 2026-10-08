@@ -146,8 +146,8 @@ sudo journalctl -u seaview-daily -f
 The second command shows the log as it's written. Press **Ctrl+C** to stop watching; the
 job keeps running and you can close the window.
 
-The first run fills in the last 3 days for 3 products and takes **about an hour**. Later runs
-only add the newest day (~20–25 minutes).
+The first run fills in the last 3 days for 3 products. Later runs only add the newest day.
+Both should take minutes; at most an hour if the server's CPU is being throttled.
 
 ✅ **Check (when finished):**
 ```bash

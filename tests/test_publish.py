@@ -20,6 +20,11 @@ def tile_dir(temp_dir, monkeypatch):
     return tiles
 
 
+def finished(path):
+    path.mkdir(parents=True)
+    (path / publish.DONE).touch()
+
+
 def make_product(tile_dir, product, calls):
     def run(dtm, verbose, force):
         calls.append(product)
@@ -29,13 +34,32 @@ def make_product(tile_dir, product, calls):
 
 class TestProcessDay:
 
-    def test_skips_existing_days(self, tile_dir, monkeypatch):
-        (tile_dir / "ssh" / "2026-10-05").mkdir(parents=True)
+    def test_skips_finished_days(self, tile_dir, monkeypatch):
+        finished(tile_dir / "ssh" / "2026-10-05")
         calls = []
         monkeypatch.setattr(publish, "PRODUCTS",
                             {p: make_product(tile_dir, p, calls) for p in ["ssh", "ostia", "globcolour"]})
         assert publish.process_day("2026-10-05") == []
         assert calls == ["ostia", "globcolour"]
+        assert (tile_dir / "ostia" / "2026-10-05" / publish.DONE).is_file()
+
+    def test_redoes_interrupted_day(self, tile_dir, monkeypatch):
+        partial = tile_dir / "ssh" / "2026-10-05"
+        (partial / "9").mkdir(parents=True)  # no .done marker: run was killed
+        calls = []
+        monkeypatch.setattr(publish, "PRODUCTS",
+                            {p: make_product(tile_dir, p, calls) for p in ["ssh", "ostia", "globcolour"]})
+        assert publish.process_day("2026-10-05") == []
+        assert calls == ["ssh", "ostia", "globcolour"]
+        assert not (partial / "9").exists()
+        assert (partial / publish.DONE).is_file()
+
+    def test_remove_unfinished_keeps_finished_days(self, tile_dir):
+        finished(tile_dir / "ostia" / "2026-10-04")
+        (tile_dir / "ssh" / "2026-10-04" / "9").mkdir(parents=True)
+        publish.remove_unfinished()
+        assert (tile_dir / "ostia" / "2026-10-04").is_dir()
+        assert not (tile_dir / "ssh" / "2026-10-04").exists()
 
     def test_failure_removes_partial_output_and_continues(self, tile_dir, monkeypatch):
         def broken(dtm, verbose, force):
@@ -63,8 +87,9 @@ class TestBuildLayerConfig:
 
     def test_drops_products_without_tiles_and_sets_dates(self, tile_dir, temp_dir):
         for d in pd.date_range("2026-09-20", "2026-10-05"):
-            (tile_dir / "ssh" / str(d.date())).mkdir(parents=True)
-        (tile_dir / "ostia" / "2026-10-04").mkdir(parents=True)
+            finished(tile_dir / "ssh" / str(d.date()))
+        finished(tile_dir / "ostia" / "2026-10-04")
+        (tile_dir / "globcolour" / "2026-10-05").mkdir(parents=True)  # unfinished: not listed
         out = temp_dir / "out"
         out.mkdir()
         data = json.loads(publish.build_layer_config(out).read_text())

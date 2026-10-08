@@ -29,7 +29,8 @@ self-contained server setup. The original README, with the Python API reference,
 Satellite layers are listed by date (the last 8 days available). Data for a day is normally
 published by Copernicus the following day, sometimes later for chlorophyll.
 
-**WAM region:** 10°S–10°N, 62°W–15°E, zoom levels 0–10.
+**WAM region:** 10°S–10°N, 62°W–15°E. Tiles are made for zoom levels 0–8 (about 0.6 km per
+pixel, finer than the 4–14 km data); the map can zoom to 12 and stretches the zoom-8 tiles.
 **Colour ranges:** SSH −0.25 to +0.25 m · SST 20–31 °C · Chl 0.01–100 mg/m³ (log scale).
 
 ---
@@ -53,8 +54,9 @@ published by Copernicus the following day, sometimes later for chlorophyll.
 - **HTTPS:** a free Let's Encrypt certificate (certbot) that renews automatically.
 - **Daily job:** a systemd timer runs `sea daily` in Docker. It fills in any of the last 3 days
   that are missing, skips days already done, and retries data that isn't published yet on the
-  next run. A new day takes ~20–25 minutes for all three products (about 17,000 tiles and
-  55 MB per product per day).
+  next run. Each finished day gets a `.done` marker; a day cut off by a reboot or time limit
+  has none, so it's deleted and redone rather than shown half-finished. At zoom 0–8 a product-day
+  is about 1,250 tiles; a new day should take a few minutes (not yet timed on the server).
 - **Cost:** about $24/month for the server. Copernicus data is free.
 
 ---
@@ -221,14 +223,19 @@ on it.
 ## Architecture and data flow
 
 - systemd `seaview-daily.timer` (OnCalendar 06,18:00 UTC, Persistent=true) → `seaview-daily.service`
-  (oneshot, TimeoutStartSec=4h) → `docker run seaview-daily daily --env ${CRUISE} --days ${DAYS}`
+  (oneshot, TimeoutStartSec=11h) → `docker run seaview-daily daily --env ${CRUISE} --days ${DAYS}`
   with `CRUISE=wam DAYS=3`, `--env-file /etc/seaview/cmems.env`, and
   `SEAVIEW_BASE_TILE_DIR=/srv/cruise/tiles`, `SEAVIEW_BASE_DATA_DIR=/var/lib/seaview/data`,
   `SEAVIEW_WEB_DIR=/srv/cruise`, `TQDM_DISABLE=1`.
 - `seaview.publish.daily(web_dir, days)`: for each of yesterday back to `days` ago, and each product
-  in `settings.updated_tiles` (`globcolour, ostia, ssh`), skips if `tile_dir/<product>/<date>/` exists,
-  else calls `tile.<product>(dtm, force=False)`. Afterwards it regenerates `colorbars/*.png` and
-  `layer_config.json` (written atomically) into `web_dir`. It exits 1 only on real exceptions.
+  in `settings.updated_tiles` (`globcolour, ostia, ssh`), skips if `tile_dir/<product>/<date>/.done`
+  exists, else deletes any leftover directory and calls `tile.<product>(dtm, force=False)`, then writes
+  `.done`. At the start of each run, `remove_unfinished()` deletes every date directory without
+  `.done`, and `layer_config` lists only dates with `.done`. Afterwards it regenerates `colorbars/*.png` and
+  `layer_config.json` (written atomically) into `web_dir`. `layer_config.json` also carries
+  `max_native_zoom` (max of `zoom_levels`) and `bounds` (the region box). The map uses them for
+  `maxNativeZoom` (stretch tiles beyond that zoom instead of requesting missing ones) and to avoid
+  requesting tiles outside the region. It exits 1 only on real exceptions.
 - `tile_dir` = `{base_tile_dir}/{cruise_name}` = `/srv/cruise/tiles/WAM`. Dynaconf env `[wam]` sets
   `remote_url = ""`, so `layer_config.base_url` = `/tiles/WAM` (relative, same origin as the map).
 - Web map: `web/index.html` + `web/js/seaview.js` read `site_config.json`, then `layer_config.json`
@@ -282,7 +289,19 @@ enables the timer. It never restarts a running job.
    Fixed with panes (`graticule` z350, `eez` z360, below `overlayPane` z400) and `interactive: false`
    on the grid and route lines.
 
+6. The first server run (2026-10-07) hit the old 4 h `TimeoutStartSec` and was killed mid-way through
+   `ssh 2026-10-04`, leaving a partial day that the old "directory exists" check would skip forever.
+   That led to the `.done` markers and the 11 h limit. Zoom was also cut from 0–10 to 0–8 (14x fewer
+   tiles). Lightsail CPU is burstable: once burst credit runs out, runs slow down about 5x (an SSH day
+   took 4 min with credit, 18–24 min without).
+
 ## Gotchas
+
+- **Disk space:** the user's drive filled up with Docker images and build cache on 2026-10-08. Prune
+  after every build (`docker image prune -f`, `docker builder prune -f`), remove helper images, and
+  delete scratch files right after each test. `server/Dockerfile` installs the pixi environment from
+  a stub package before copying `src/`, so code edits don't rebuild the ~3 GB layer. Ask before
+  building the image locally.
 
 - `.gitignore` ignores `site/` (MkDocs output), which is why the web map lives in `web/`.
 - The `sea-update` console script points straight at a function, not the Typer app, so it ignores CLI
@@ -293,7 +312,7 @@ enables the timer. It never restarts a running job.
   `tests/test_cli.py` hangs (it runs real downloads), and 24 other tests fail identically on upstream
   `5f89447` (stale mocks and signatures). Reliable tests: `tests/test_publish.py`,
   `tests/test_tilers_utils.py` (16 pass).
-- Benchmarks: ~30 tiles/s on 4 CPUs; real data on 2 CPUs takes ~7.5 min per product-day including
+- Benchmarks (at zoom 0–10, before the cut to 0–8): ~30 tiles/s on 4 CPUs; real data on 2 CPUs took ~7.5 min per product-day including
   download. Worker processes peak at ~220 MB each.
 - The EEZ file (`web/data/eez.geojson`, 5.8 MB, 258 features, properties `Country`, `ISO_A3`) is
   fetched only when its layer is first switched on. It's ~2.5 MB gzipped.

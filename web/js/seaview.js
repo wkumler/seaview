@@ -186,7 +186,12 @@
                     var url = lc.url_template.replace('{base_url}/', baseUrl).replace('{base_url}', baseUrl)
                                              .replace('{date}', date);
                     var key = lc.id + '_' + date;
-                    layers[key] = L.tileLayer(url, {attribution: lc.attribution, opacity: 0.7});
+                    layers[key] = L.tileLayer(url, {
+                        attribution: lc.attribution, opacity: 0.7,
+                        // Past the deepest generated zoom, stretch those tiles instead of going blank.
+                        maxNativeZoom: config.max_native_zoom || 10,
+                        bounds: config.bounds
+                    });
                     grouped[lc.name][date] = layers[key];
                 });
             });
@@ -216,7 +221,8 @@
     function init(cfg) {
         if (cfg.title) document.title = cfg.title;
 
-        var map = L.map('map', {center: cfg.map.center, zoom: cfg.map.zoom, zoomControl: true});
+        var map = L.map('map', {center: cfg.map.center, zoom: cfg.map.zoom, maxZoom: cfg.map.max_zoom || 12,
+                                zoomControl: true});
         // Grid lines and EEZ polygons get their own panes between the satellite tiles (200) and
         // the station layers (overlayPane, 400), so stations stay on top and clickable no matter
         // in which order layers are switched on or redrawn.
@@ -229,7 +235,7 @@
         cfg.basemaps.forEach(function (b, i) {
             var layer = L.tileLayer(b.url, {
                 attribution: b.attribution, minZoom: 0,
-                maxZoom: b.maxZoom || 18, maxNativeZoom: b.maxZoom || 18
+                maxZoom: cfg.map.max_zoom || 12, maxNativeZoom: b.maxNativeZoom || 18
             });
             basemaps[b.name] = layer;
             if (b.default || (i === 0 && !cfg.basemaps.some(function (x) { return x.default; }))) layer.addTo(map);
